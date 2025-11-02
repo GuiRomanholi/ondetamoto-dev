@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Formulário de Estabelecimento</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans bg-gray-100 text-gray-800">
+
+<div th:replace="~{fragments/layout :: header}"></div>
+
+<main class="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+  <h1 class="text-2xl font-semibold text-blue-600 text-center mb-6">
+    <span th:text="${estabelecimento.id == null} ? 'Cadastrar' : 'Editar'"></span> Estabelecimento
+  </h1>
+
+  <form th:action="@{/estabelecimentos/salvar}" th:object="${estabelecimento}" method="post">
+    <input type="hidden" th:field="*{id}" />
+
+    <div class="mb-4">
+      <label for="endereco" class="block mb-1 font-medium">Endereço:</label>
+      <input type="text" id="endereco" th:field="*{endereco}" required
+             class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300">
+    </div>
+
+    <div class="mb-4">
+      <label for="usuario" class="block mb-1 font-medium">Usuário Responsável:</label>
+      <select id="usuario" th:field="*{usuario}" required
+              class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300">
+        <option value="">Selecione um usuário</option>
+        <option th:each="user : ${allUsuarios}"
+                th:value="${user.id}"
+                th:text="${user.email}"></option>
+      </select>
+    </div>
+
+    <div class="flex items-center gap-3 mt-6">
+      <button type="submit"
+              class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+        Salvar
+      </button>
+
+      <a th:href="@{/estabelecimentos/listar}"
+         class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition">
+        Cancelar
+      </a>
+    </div>
+
+  </form>
+</main>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+
+</body>
+</html>

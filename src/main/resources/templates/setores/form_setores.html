@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Formulário de Setor</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans m-0 p-0 bg-gray-100 text-gray-800">
+
+<div th:replace="~{fragments/layout :: header}"></div>
+
+<main class="max-w-4xl mx-auto my-10 p-5 bg-white rounded-lg shadow-lg">
+  <h1 class="text-3xl text-blue-600 mb-5 text-center">
+    <span th:text="${setor.id == null} ? 'Cadastrar' : 'Editar'"></span> Setor
+  </h1>
+
+  <form th:action="@{/setores/salvar}" th:object="${setor}" method="post">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+    <input type="hidden" th:field="*{id}" />
+
+    <div class="mb-4">
+      <label for="nome" class="block mb-2 font-bold">Nome:</label>
+      <input type="text" id="nome" th:field="*{nome}" required
+             class="w-full p-2 border border-gray-300 rounded-md">
+    </div>
+
+    <div class="mb-4">
+      <label for="tipo" class="block mb-2 font-bold">Tipo:</label>
+      <select id="tipo" th:field="*{tipo}" required
+              class="w-full p-2 border border-gray-300 rounded-md">
+        <option value="">Selecione um tipo</option>
+        <option th:each="tipo : ${T(br.com.fiap.ondetamoto.model.Tipo).values()}"
+                th:value="${tipo}" th:text="${tipo}"></option>
+      </select>
+    </div>
+
+    <div class="mb-4">
+      <label for="tamanho" class="block mb-2 font-bold">Tamanho:</label>
+      <input type="text" id="tamanho" th:field="*{tamanho}" required
+             class="w-full p-2 border border-gray-300 rounded-md">
+    </div>
+
+    <div class="mb-4">
+      <label for="estabelecimento" class="block mb-2 font-bold">Estabelecimento:</label>
+      <select id="estabelecimento" th:field="*{estabelecimento}" required
+              class="w-full p-2 border border-gray-300 rounded-md">
+        <option value="">Selecione um estabelecimento</option>
+        <option th:each="est : ${estabelecimentos}"
+                th:value="${est.id}"
+                th:text="${est.endereco}"></option>
+      </select>
+    </div>
+
+    <div class="mt-6">
+      <button type="submit"
+              class="py-2 px-4 bg-blue-600 text-white rounded-md cursor-pointer hover:bg-blue-700">
+        Salvar
+      </button>
+      <a th:href="@{/setores/listar}"
+         class="inline-block py-2 px-4 bg-gray-500 text-white rounded-md no-underline hover:bg-gray-600">
+        Cancelar
+      </a>
+    </div>
+  </form>
+</main>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+
+</body>
+</html>

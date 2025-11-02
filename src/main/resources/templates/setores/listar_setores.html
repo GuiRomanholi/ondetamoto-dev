@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Setores</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans m-0 p-0 bg-gray-100 text-gray-800">
+
+<div th:replace="~{fragments/layout :: header}"></div>
+
+<main class="max-w-4xl mx-auto my-10 p-5 bg-white rounded-lg shadow-lg">
+    <h1 class="text-3xl text-blue-600 mb-5 text-center">Lista de Setores</h1>
+
+    <div class="text-center mb-4">
+        <p th:if="${mensagem}" th:text="${mensagem}" class="text-green-600"></p>
+        <p th:if="${erro}" th:text="${erro}" class="text-red-600"></p>
+    </div>
+
+    <table class="w-full border-collapse mt-5">
+        <thead>
+        <tr class="bg-gray-100">
+            <th class="border border-gray-300 p-2 text-left">ID</th>
+            <th class="border border-gray-300 p-2 text-left">Nome</th>
+            <th class="border border-gray-300 p-2 text-left">Tipo</th>
+            <th class="border border-gray-300 p-2 text-left">Tamanho</th>
+            <th class="border border-gray-300 p-2 text-left">Estabelecimento</th>
+            <th class="border border-gray-300 p-2 text-left">Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="setor : ${setores.content}" class="border-b border-gray-200">
+            <td th:text="${setor.id}" class="border border-gray-300 p-2"></td>
+            <td th:text="${setor.nome}" class="border border-gray-300 p-2"></td>
+            <td th:text="${setor.tipo}" class="border border-gray-300 p-2"></td>
+            <td th:text="${setor.tamanho}" class="border border-gray-300 p-2"></td>
+            <td th:text="${setor.estabelecimento.endereco}" class="border border-gray-300 p-2"></td>
+            <td class="border border-gray-300 p-2">
+                <a th:href="@{'/setores/editar/' + ${setor.id}}"
+                   class="text-blue-600 no-underline mr-3 hover:underline">Editar</a>
+
+                <form th:action="@{/setores/excluir/{id}(id=${setor.id})}" method="post" class="inline">
+                    <input type="hidden" name="_method" value="delete"/>
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <button type="submit"
+                            class="text-red-600 bg-transparent border-none p-0 cursor-pointer underline hover:text-red-800"
+                            onclick="return confirm('Tem certeza que deseja excluir este setor?');">
+                        Excluir
+                    </button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p class="text-center mt-5">
+        <a th:href="@{/setores/novo}"
+           class="inline-block py-2 px-4 bg-blue-600 text-white rounded-md no-underline hover:bg-blue-700">
+            Adicionar Novo Setor
+        </a>
+    </p>
+</main>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+
+</body>
+</html>

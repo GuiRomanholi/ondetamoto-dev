@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Formulário de Moto</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans m-0 p-0 bg-gray-100 text-gray-800">
+
+<div th:replace="~{fragments/layout :: header}"></div>
+
+<main class="max-w-4xl mx-auto my-10 p-5 bg-white rounded-lg shadow-lg">
+  <h1 class="text-3xl text-blue-600 mb-5 text-center">
+    <span th:text="${moto.id == null} ? 'Cadastrar' : 'Editar'"></span> Moto
+  </h1>
+
+  <form th:action="@{/motos/salvar}" th:object="${moto}" method="post">
+    <input type="hidden" th:field="*{id}" />
+
+    <div class="mb-4">
+      <label for="marca" class="block mb-2 font-bold">Marca:</label>
+      <input type="text" id="marca" th:field="*{marca}" required
+             class="w-full p-2 border border-gray-300 rounded-md">
+    </div>
+
+    <div class="mb-4">
+      <label for="placa" class="block mb-2 font-bold">Placa:</label>
+      <input type="text" id="placa" th:field="*{placa}" required
+             class="w-full p-2 border border-gray-300 rounded-md">
+    </div>
+
+    <div class="mb-4">
+      <label for="tag" class="block mb-2 font-bold">Tag:</label>
+      <input type="text" id="tag" th:field="*{tag}"
+             class="w-full p-2 border border-gray-300 rounded-md">
+    </div>
+
+    <div class="mb-4">
+      <label for="setores" class="block mb-2 font-bold">Setor:</label>
+      <select id="setores" th:field="*{setores}"
+              class="w-full p-2 border border-gray-300 rounded-md">
+        <option value="">-- Selecione um Setor --</option>
+        <option th:each="setor : ${setores}"
+                th:value="${setor.id}"
+                th:text="${setor.nome}"
+                th:selected="${moto.setores != null and moto.setores.id == setor.id}">
+        </option>
+      </select>
+    </div>
+
+    <div class="mt-6">
+      <button type="submit"
+              class="py-2 px-4 bg-blue-600 text-white rounded-md cursor-pointer hover:bg-blue-700">Salvar</button>
+      <a th:href="@{/motos/listar}"
+         class="inline-block py-2 px-4 bg-gray-500 text-white rounded-md no-underline hover:bg-gray-600">Cancelar</a>
+    </div>
+  </form>
+</main>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+
+</body>
+</html>

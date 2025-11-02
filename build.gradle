@@ -1,0 +1,64 @@
+plugins {
+	id 'java'
+	id 'application'
+	id 'org.springframework.boot' version '3.4.5'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'br.com.fiap'
+version = '1.0.0'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'com.auth0:java-jwt:4.5.0'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.5'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-cache'
+
+	// Flyway
+	implementation 'org.flywaydb:flyway-core'
+	implementation 'org.flywaydb:flyway-sqlserver'
+	//implementation 'org.flywaydb:flyway-database-postgresql'
+	//implementation 'org.flywaydb:flyway-database-mysql'
+	//implementation 'org.flywaydb:flyway-database-oracle'
+
+	runtimeOnly 'com.microsoft.sqlserver:mssql-jdbc'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+// Configuração do Spring Boot para gerar um JAR executável
+springBoot {
+	mainClass = 'br.com.fiap.ondetamoto.OndetamotoApplication'
+}
+
+// Opcional: renomear o JAR final
+tasks.named('bootJar') {
+	archiveBaseName.set('api-ondetamoto')
+}
+
+// Desabilita a tarefa 'jar' para evitar o JAR duplicado (-plain.jar)
+tasks.named('jar') {
+	enabled = false
+}
+

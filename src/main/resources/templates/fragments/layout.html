@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>OndeTaMoto?</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans bg-gray-100 text-gray-800">
+
+<header th:fragment="header" class="bg-blue-600 text-white py-6 border-b-4 border-blue-800">
+    <div class="max-w-5xl mx-auto text-center">
+        <h1 class="text-4xl font-semibold">OndeTaMoto?</h1>
+
+        <nav class="mt-4">
+            <ul class="flex justify-center gap-8">
+                <li>
+                    <a th:href="@{/motos/listar}"
+                       class="font-semibold hover:text-gray-200 text-lg transition">
+                        Motos
+                    </a>
+                </li>
+
+                <li>
+                    <a th:href="@{/usuarios/listar}"
+                       class="font-semibold hover:text-gray-200 text-lg transition">
+                        Usuários
+                    </a>
+                </li>
+
+                <li>
+                    <a th:href="@{/estabelecimentos/listar}"
+                       class="font-semibold hover:text-gray-200 text-lg transition">
+                        Estabelecimentos
+                    </a>
+                </li>
+
+                <li>
+                    <a th:href="@{/setores/listar}"
+                       class="font-semibold hover:text-gray-200 text-lg transition">
+                        Setores
+                    </a>
+                </li>
+
+                <li th:if="${#authentication.name == 'anonymousUser'}">
+                    <a th:href="@{/login}"
+                       class="font-semibold hover:text-gray-200 text-lg transition">
+                        Login
+                    </a>
+                </li>
+
+                <li th:if="${#authentication.name != 'anonymousUser'}">
+                    <form th:action="@{/logout}" method="post" class="inline">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <button type="submit"
+                                class="font-semibold hover:text-gray-200 text-lg transition cursor-pointer">
+                            Logout
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<footer th:fragment="footer" class="text-center py-6 mt-10 text-white bg-gray-800">
+    <div class="max-w-5xl mx-auto">
+        <p>&copy; 2025 OndeTaMoto. Todos os direitos reservados.</p>
+    </div>
+</footer>
+
+</body>
+</html>

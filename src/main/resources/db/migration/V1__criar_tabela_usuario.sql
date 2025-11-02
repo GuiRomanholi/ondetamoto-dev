@@ -1,0 +1,6 @@
+CREATE TABLE usuario (
+    id BIGINT IDENTITY(1,1) PRIMARY KEY,
+    email VARCHAR(255) NOT NULL,
+    senha VARCHAR(255) NOT NULL,
+    role VARCHAR(50)
+);

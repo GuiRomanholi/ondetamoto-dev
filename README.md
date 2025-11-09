@@ -19,20 +19,6 @@ A solução **OndeTáMoto?** resolve o problema de controle ineficiente das moto
 * **Organização e Segurança**: Promove um controle mais organizado e seguro da frota.
 * **Inovação Adaptada**: Utiliza tecnologia IoT para uma gestão prática e inteligente, sob medida para a operação da Mottu.
 
-## 🎯 Sumário
-
-* [Pré-requisitos](#-pré-requisitos)
-* [Parte 1: Provisionamento da Infraestrutura do Banco de Dados](#-parte-1-provisionamento-da-infraestrutura-do-banco-de-dados)
-* [Parte 2: Deploy da Aplicação com Script Automatizado](#-parte-2-deploy-da-aplicação-com-script-automatizado)
-* [Parte 3: Configuração do Deploy Contínuo com GitHub Actions](#-parte-3-configuração-do-deploy-contínuo-com-github-actions)
-    * [3.1 Configurando os Segredos (Secrets) do Repositório](#31-configurando-os-segredos-secrets-do-repositório)
-    * [3.2 Ajustando o Arquivo de Workflow (.yml)](#32-ajustando-o-arquivo-de-workflow-yml)
-    * [3.3 Obtendo e Configurando o Perfil de Publicação (Publish Profile)](#33-obtendo-e-configurando-o-perfil-de-publicação-publish-profile)
-* [Parte 4: Verificação e Testes](#-parte-4-verificação-e-testes)
-    * [4.1 Verificando as Tabelas no Banco de Dados](#41-verificando-as-tabelas-no-banco-de-dados)
-    * [4.2 Testando a API com Requisições](#42-testando-a-api-com-requisições)
-* [Considerações Finais e Troubleshooting](#-considerações-finais-e-troubleshooting)
-
 ## ✔️ Pré-requisitos
 
 Antes de começar, garanta que você tenha:

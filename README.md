@@ -253,7 +253,8 @@ Tambem pode acessar as páginas criadas com o thymeleaf (Recomendado):
 > **Importante:**
 > Crie um **Estabelecimento** antes de criar um **Setor** e crie um **Setor** antes de adicionar uma **Moto**. O ID gerado em um passo é usado no próximo.
 
-#### Exemplo 1: `POST` (Registrar Usuário)
+## Rotas recomendadas para o Teste:
+#### Exemplo 1: (Registrar Usuário)
 
 ```bash
 {
@@ -262,16 +263,25 @@ Tambem pode acessar as páginas criadas com o thymeleaf (Recomendado):
     "role": "ADMIN"
 }
 ```
-
-#### Exemplo 2: `POST` (Criar Estabelecimento)
+#### Exemplo 1.5: (Logar Usuário)
 
 ```bash
 {
-    "endereco": "Avenida Lins de Vasconcelos 362"
+    "email": "henriquechaco@gmail.com",
+    "senha": "SenhaForte123"
 }
 ```
 
-#### Exemplo 3: `POST` (Criar Setor)
+#### Exemplo 2: (Criar Estabelecimento)
+
+```bash
+{
+    "endereco": "Avenida Ale de Vasconcelos 362",
+    "usuarioId": 1
+}
+```
+
+#### Exemplo 3: (Criar Setor)
 
 ```bash
 {
@@ -282,7 +292,7 @@ Tambem pode acessar as páginas criadas com o thymeleaf (Recomendado):
 }
 ```
 
-#### Exemplo 4: `POST` (Adicionar Moto)
+#### Exemplo 4: (Adicionar Moto)
 
 
 ```bash

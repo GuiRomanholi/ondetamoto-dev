@@ -1,4 +1,4 @@
-# Projeto Ondetamoto - Guia de Deploy e Execução na Azure
+# Projeto Ondetamoto - Guia de Deploy
 
 Este documento detalha o processo completo para provisionar a infraestrutura na Microsoft Azure, realizar o deploy da aplicação Java (Spring Boot) e verificar a sua funcionalidade.
 

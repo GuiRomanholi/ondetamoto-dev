@@ -37,12 +37,17 @@ A solução **OndeTáMoto?** resolve o problema de controle ineficiente das moto
 
 Antes de começar, garanta que você tenha:
 
-1.  **Conta na Microsoft Azure**: Com uma assinatura ativa.
-2.  **Azure CLI**: Instalado e configurado em sua máquina ou utilize o **Cloud Shell** diretamente no portal Azure.
-3.  **Repositório no GitHub**: Com o código-fonte da aplicação.
+| Ferramenta / Recurso             | Necessário | Obs.                              |
+| -------------------------------- | :--------: | --------------------------------- |
+| Conta Azure                      |      ✅     | Necessário para App Service + SQL |
+| Azure Cloud Shell ou Azure CLI   |      ✅     | Para criar a infraestrutura       |
+| Azure DevOps (Repos + Pipelines) |      ✅     | Usado no deploy                   |
+| Gradle                           |      ✅     | Build da aplicação                |
+| Java 17                          |      ✅     | Versão configurada no App Service |
+
 
 ## 🎥 Link do Vídeo
-[Link do Video de Devops](https://www.youtube.com/watch?v=MEZ-fd3zk-c)
+[Link do Video de Devops](https://www.youtube.com/watch?v=vp3htHxnF74)
 
 ---
 
@@ -190,88 +195,40 @@ Este script irá criar o App Service, o Application Insights e configurar as var
 
 ---
 
-## 🔧 Parte 3: Configuração do Deploy Contínuo com GitHub Actions
+## 🔧 Parte 3 — Configurando o CI/CD com Azure Pipelines (Classic)
 
-O script anterior cria a base, mas agora precisamos garantir que o GitHub consiga autenticar na Azure e que o processo de build e deploy da aplicação Java funcione corretamente.
+3.1 Onde o código está?
 
-### 3.1 Configurando os Segredos (Secrets) do Repositório
+ - O código fica no Azure Repos, dentro do Azure DevOps.
 
-As credenciais do banco de dados não devem ficar no código. Vamos configurá-las como "Secrets" no GitHub.
+3.2 Criação da Pipeline Clássica
 
-1.  No seu repositório GitHub, vá em **Settings** > **Secrets and variables** > **Actions**.
-2.  Clique em **New repository secret** e adicione os seguintes segredos:
+ - Acesse: Azure DevOps → Pipelines → Create Pipeline
 
-    * **Nome**: `SPRING_DATASOURCE_USERNAME`
-        * **Valor**: `admsql`
+ - Escolha:
 
-    * **Nome**: `SPRING_DATASOURCE_PASSWORD`
-        * **Valor**: `Fiap@2tdsvms`
+   Classic Editor
 
-    * **Nome**: `SPRING_DATASOURCE_URL`
-        * **Como obter o valor**: Vá para o Portal Azure > `rg-ondetamoto` > `ondetamotodb (sqlserver-rm557462/ondetamotodb)` > `Configurações` > `Cadeias de conexão` > copie o valor do campo **JDBC**.
-        > jdbc:sqlserver://sqlserver-rm557462.database.windows.net:1433;database=ondetamotodb;user=admsql@sqlserver-rm557462;password={your_password_here};encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
+   Selecione o repositório do projeto no Azure Repos
 
-### 3.2 Ajustando o Arquivo de Workflow (.yml)
+Escolha o template Java with Gradle (ou pipeline vazia)
 
-O script `deploy-ondetamoto.sh` cria um arquivo de workflow `.yml` no seu repositório, dentro da pasta `.github/workflows/`. Este arquivo provavelmente precisará ser substituído.
+-- Etapas configuradas na Pipeline
 
-1.  No seu repositório, localize e abra o arquivo `.yml` recém-criado.
-2.  Substitua **todo o conteúdo** dele pelo código abaixo. Este código está ajustado para um build com Gradle e Java 17.
+| Etapa               | Descrição                                       |
+| ------------------- | ----------------------------------------------- |
+| Checkout do código  | Obtém o código do repositório Azure Repos       |
+| Java Tool Installer | Configura o Java 17                             |
+| Gradle Build        | Executa: `./gradlew build`                      |
+| Azure WebApp Deploy | Faz deploy do arquivo `.jar` para o App Service |
 
-    ```yaml
-    # Docs for the Azure Web Apps Deploy action: [https://github.com/Azure/webapps-deploy](https://github.com/Azure/webapps-deploy)
-    # More GitHub Actions for Azure: [https://github.com/Azure/actions](https://github.com/Azure/actions)
-    
-    name: 'Build and deploy JAR app to Azure Web App: ondetamoto-rm557462'
-    
-    on:
-      push:
-        branches:
-          - main
-      workflow_dispatch:
-    
-    jobs:
-      build-and-deploy:
-        runs-on: ubuntu-latest
-        steps:
-        - uses: actions/checkout@v2
-        
-        - name: Set up Java version
-          uses: actions/setup-java@v1
-          with:
-            java-version: '17'
-            
-        - name: Grant execute permission to gradlew
-          run: chmod +x ./gradlew
-          
-        - name: Build with Gradle
-          env:
-            SPRING_DATASOURCE_URL: ${{ secrets.SPRING_DATASOURCE_URL }}
-            SPRING_DATASOURCE_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
-            SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
-          run: ./gradlew build --stacktrace
-          
-        - name: Deploy to Azure Web App
-          uses: azure/webapps-deploy@v2
-          with: 
-            app-name: 'ondetamoto-rm557462'
-            slot-name: 'production'
-            publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_5B0BB8510E2D4B95800D1A7EA53D1044 }} # LEMBRE-SE DE VERIFICAR O NOME DO SECRET!
-            package: 'build/libs/*.jar'
-    ```
-
-### 3.3 Obtendo e Configurando o Perfil de Publicação (Publish Profile)
-
-O workflow precisa de um segredo especial (`AZUREAPPSERVICE_PUBLISHPROFILE_...`) para se autenticar na Azure. O script de deploy já deve ter criado este segredo, mas caso precise ser atualizado ou criado manualmente:
-
-1.  No Portal Azure, navegue até o seu App Service (`ondetamoto-rm557462` dentro do grupo `rg-ondetamoto`).
-2.  Clique em **Baixar o perfil de publicação**. Um arquivo `.PublishSettings` será baixado.
-3.  Abra este arquivo com um editor de texto (como o VS Code).
-4.  Copie **todo o conteúdo** do arquivo.
-5.  Volte para os segredos do seu repositório no GitHub (**Settings** > **Secrets and variables** > **Actions**).
-6.  Encontre o segredo chamado `AZUREAPPSERVICE_PUBLISHPROFILE_...` e clique em **Update**. Cole o conteúdo que você copiou no campo de valor. Se ele não existir, crie-o com este nome.
-
-Após salvar o novo arquivo `.yml` e confirmar os segredos, um `push` para a branch `main` irá disparar a Action, que fará o build do projeto e o deploy na Azure.
+3.4 Adicionando Variáveis no Pipeline
+-Na pipeline, clique em Variables e adicione:
+| Nome                       | Valor                                                                               |
+| -------------------------- | ----------------------------------------------------------------------------------- |
+| SPRING_DATASOURCE_USERNAME | admsql                                                                              |
+| SPRING_DATASOURCE_PASSWORD | Fiap@2tdsvms                                                                        |
+| SPRING_DATASOURCE_URL      | jdbc:sqlserver://sqlserver-rm557462.database.windows.net:1433;database=ondetamotodb;encrypt=true;trustServerCertificate=false;|
 
 ---
 
@@ -297,13 +254,15 @@ Após a conclusão do deploy pelo GitHub Actions, o Flyway deverá ter executado
 
 ### 4.2 Testando a API com Requisições
 
-## 🔗 Rotas Pricipais pra Teste (Swagger)
+## 🔗 Rotas Pricipais pra Teste (Swagger e Thymeleaf)
 
 A API do projeto podia ser acessada via Swagger na rota:
 
-[http://ondetamoto-rm557462.azurewebsites.net/swagger-ui/index.html](http://ondetamoto-rm557462.azurewebsites.net/swagger-ui/index.html)
+[https://ondetamoto-rm557462.azurewebsites.net/swagger-ui/index.html](https://ondetamoto-rm557462.azurewebsites.net/swagger-ui/index.html)
 
-Para testar os endpoints, você precisará da URL do seu App Service (ex: `https://ondetamoto-rm557462.azurewebsites.net`). Você pode encontrá-la na página de visão geral do seu App Service no portal Azure.
+Tambem pode acessar as páginas criadas com o thymeleaf (Recomendado):
+
+[https://ondetamoto-rm557462.azurewebsites.net/login](https://ondetamoto-rm557462.azurewebsites.net/login)
 
 > **Importante:**
 > Crie um **Estabelecimento** antes de criar um **Setor** e crie um **Setor** antes de adicionar uma **Moto**. O ID gerado em um passo é usado no próximo.
